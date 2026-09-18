@@ -15,20 +15,19 @@
  */
 
 apply plugin: 'com.android.library'
-apply from: '../maven-push.gradle'
+//apply from: '../maven-push.gradle'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    namespace 'com.elvishew.xlog.libcat'
+    compileSdkVersion 37
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 29
     }
 
     buildTypes {
@@ -36,6 +35,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
         }
+    }
+    lint {
+        targetSdk 37
+    }
+    testOptions {
+        targetSdk 37
     }
 }
 
