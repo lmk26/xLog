@@ -16,8 +16,8 @@
 
 package com.elvishew.xlog.printer;
 
-import com.elvishew.xlog.internal.DefaultsFactory;
 import com.elvishew.xlog.flattener.Flattener;
+import com.elvishew.xlog.internal.DefaultsFactory;
 
 /**
  * Log {@link Printer} using {@code System.out.println(String)}.
@@ -49,7 +49,7 @@ public class ConsolePrinter implements Printer {
 
   @Override
   public void println(int logLevel, String tag, String msg) {
-    String flattenedLog = flattener.flatten(logLevel, tag, msg).toString();
+    String flattenedLog = flattener.flatten(System.currentTimeMillis(), logLevel, tag, msg).toString();
     System.out.println(flattenedLog);
   }
 }

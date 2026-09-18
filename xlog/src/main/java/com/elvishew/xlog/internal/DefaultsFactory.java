@@ -18,7 +18,6 @@ package com.elvishew.xlog.internal;
 
 import com.elvishew.xlog.flattener.DefaultFlattener;
 import com.elvishew.xlog.flattener.Flattener;
-import com.elvishew.xlog.flattener.Flattener2;
 import com.elvishew.xlog.formatter.border.BorderFormatter;
 import com.elvishew.xlog.formatter.border.DefaultBorderFormatter;
 import com.elvishew.xlog.formatter.message.json.DefaultJsonFormatter;
@@ -34,8 +33,7 @@ import com.elvishew.xlog.formatter.thread.DefaultThreadFormatter;
 import com.elvishew.xlog.formatter.thread.ThreadFormatter;
 import com.elvishew.xlog.printer.Printer;
 import com.elvishew.xlog.printer.file.FilePrinter;
-import com.elvishew.xlog.printer.file.backup.BackupStrategy2;
-import com.elvishew.xlog.internal.printer.file.backup.BackupStrategyWrapper;
+import com.elvishew.xlog.printer.file.backup.BackupStrategy;
 import com.elvishew.xlog.printer.file.backup.FileSizeBackupStrategy;
 import com.elvishew.xlog.printer.file.clean.CleanStrategy;
 import com.elvishew.xlog.printer.file.clean.NeverCleanStrategy;
@@ -105,9 +103,9 @@ public class DefaultsFactory {
   }
 
   /**
-   * Create the default {@link Flattener2}.
+   * Create the default {@link Flattener}.
    */
-  public static Flattener2 createFlattener2() {
+  public static Flattener createFlattener2() {
     return new DefaultFlattener();
   }
 
@@ -128,8 +126,8 @@ public class DefaultsFactory {
   /**
    * Create the default backup strategy for {@link FilePrinter}.
    */
-  public static BackupStrategy2 createBackupStrategy() {
-    return new BackupStrategyWrapper(new FileSizeBackupStrategy(DEFAULT_LOG_FILE_MAX_SIZE));
+  public static BackupStrategy createBackupStrategy() {
+    return new FileSizeBackupStrategy(DEFAULT_LOG_FILE_MAX_SIZE, 1);
   }
 
   /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Elvis Hew
+ * Copyright 2018 Elvis Hew
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,21 +17,21 @@
 package com.elvishew.xlog.flattener;
 
 /**
- * The flattener used to flatten log elements(log level, tag and message) to a single CharSequence.
+ * The flattener used to flatten log elements(log time milliseconds, level, tag and message) to
+ * a single CharSequence.
  *
- * @since 1.3.0
- * @deprecated use {@link Flattener2} instead, since 1.6.0
+ * @since 1.6.0
  */
-@Deprecated
 public interface Flattener {
 
   /**
    * Flatten the log.
    *
-   * @param logLevel the level of log
-   * @param tag      the tag of log
-   * @param message  the message of log
+   * @param timeMillis the time milliseconds of log
+   * @param logLevel  the level of log
+   * @param tag       the tag of log
+   * @param message   the message of log
    * @return the formatted final log Charsequence
    */
-  CharSequence flatten(int logLevel, String tag, String message);
+  CharSequence flatten(long timeMillis, int logLevel, String tag, String message);
 }

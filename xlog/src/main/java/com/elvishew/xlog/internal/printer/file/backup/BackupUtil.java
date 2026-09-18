@@ -16,7 +16,7 @@
 
 package com.elvishew.xlog.internal.printer.file.backup;
 
-import com.elvishew.xlog.printer.file.backup.BackupStrategy2;
+import com.elvishew.xlog.printer.file.backup.BackupStrategy;
 
 import java.io.File;
 
@@ -28,7 +28,7 @@ public class BackupUtil {
    * @param loggingFile    the logging file
    * @param backupStrategy the strategy should be use when backing up
    */
-  public static void backup(File loggingFile, BackupStrategy2 backupStrategy) {
+  public static void backup(File loggingFile, BackupStrategy backupStrategy) {
     String loggingFileName = loggingFile.getName();
     String path = loggingFile.getParent();
     File backupFile;
@@ -48,7 +48,7 @@ public class BackupUtil {
       }
       nextBackupFile = new File(path, backupStrategy.getBackupFileName(loggingFileName, 1));
       loggingFile.renameTo(nextBackupFile);
-    } else if (maxBackupIndex == BackupStrategy2.NO_LIMIT) {
+    } else if (maxBackupIndex == BackupStrategy.NO_LIMIT) {
       for (int i = 1; i < Integer.MAX_VALUE; i++) {
         nextBackupFile = new File(path, backupStrategy.getBackupFileName(loggingFileName, i));
         if (!nextBackupFile.exists()) {
@@ -62,11 +62,11 @@ public class BackupUtil {
   }
 
   /**
-   * Check if a {@link BackupStrategy2} is valid, will throw a exception if invalid.
+   * Check if a {@link BackupStrategy} is valid, will throw a exception if invalid.
    *
    * @param backupStrategy the backup strategy to be verify
    */
-  public static void verifyBackupStrategy(BackupStrategy2 backupStrategy) {
+  public static void verifyBackupStrategy(BackupStrategy backupStrategy) {
     int maxBackupIndex = backupStrategy.getMaxBackupIndex();
     if (maxBackupIndex < 0) {
       throw new IllegalArgumentException("Max backup index should not be less than 0");

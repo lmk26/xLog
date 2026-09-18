@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'android-aspectjx'
+//apply plugin: 'android-aspectjx'
 
 android {
     compileSdkVersion 29
@@ -25,20 +25,20 @@ android {
     }
 }
 
-buildscript {
-    repositories {
-        jcenter()
-        google()
-    }
-    dependencies {
-        classpath 'com.hujiang.aspectjx:gradle-android-plugin-aspectjx:2.0.10'
-    }
-}
+//buildscript {
+//    repositories {
+//        jcenter()
+//        google()
+//    }
+//    dependencies {
+//        classpath 'com.hujiang.aspectjx:gradle-android-plugin-aspectjx:2.0.10'
+//    }
+//}
 
-aspectjx {
-    exclude 'androidx.appcompat'
-    exclude 'android.support'
-}
+//aspectjx {
+//    exclude 'androidx.appcompat'
+//    exclude 'android.support'
+//}
 
 dependencies {
     implementation 'com.elvishew:xlog:1.11.1'

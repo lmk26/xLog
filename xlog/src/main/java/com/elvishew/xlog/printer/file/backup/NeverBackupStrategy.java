@@ -23,7 +23,7 @@ import java.io.File;
  *
  * @since 1.3.0
  */
-public class NeverBackupStrategy implements BackupStrategy {
+public class NeverBackupStrategy {
 
   @Override
   public boolean shouldBackup(File file) {

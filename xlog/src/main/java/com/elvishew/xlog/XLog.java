@@ -17,6 +17,7 @@
 package com.elvishew.xlog;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.elvishew.xlog.formatter.border.BorderFormatter;
 import com.elvishew.xlog.formatter.message.json.JsonFormatter;
@@ -172,19 +173,6 @@ public class XLog {
   /**
    * Initialize log system, should be called only once.
    *
-   * @param logLevel         the log level, logs with a lower level than which would not be printed
-   * @param logConfiguration the log configuration
-   * @deprecated the log level is part of log configuration now, use {@link #init(LogConfiguration)}
-   * instead, since 1.3.0
-   */
-  @Deprecated
-  public static void init(int logLevel, LogConfiguration logConfiguration) {
-    init(new LogConfiguration.Builder(logConfiguration).logLevel(logLevel).build());
-  }
-
-  /**
-   * Initialize log system, should be called only once.
-   *
    * @param logConfiguration the log configuration
    * @since 1.3.0
    */
@@ -210,20 +198,6 @@ public class XLog {
    */
   public static void init(int logLevel, Printer... printers) {
     init(new LogConfiguration.Builder().logLevel(logLevel).build(), printers);
-  }
-
-  /**
-   * Initialize log system, should be called only once.
-   *
-   * @param logLevel         the log level, logs with a lower level than which would not be printed
-   * @param logConfiguration the log configuration
-   * @param printers         the printers, each log would be printed by all of the printers
-   * @deprecated the log level is part of log configuration now,
-   * use {@link #init(LogConfiguration, Printer...)} instead, since 1.3.0
-   */
-  @Deprecated
-  public static void init(int logLevel, LogConfiguration logConfiguration, Printer... printers) {
-    init(new LogConfiguration.Builder(logConfiguration).logLevel(logLevel).build(), printers);
   }
 
   /**
@@ -280,17 +254,6 @@ public class XLog {
   }
 
   /**
-   * Start to customize a {@link Logger} and enable thread info.
-   *
-   * @return the {@link Logger.Builder} to build the {@link Logger}
-   * @deprecated use {@link #enableThreadInfo()} instead, since 1.7.0
-   */
-  @Deprecated
-  public static Logger.Builder t() {
-    return enableThreadInfo();
-  }
-
-  /**
    * Start to customize a {@link Logger} and enable thread info, the thread info would be printed
    * with the log message.
    *
@@ -300,17 +263,6 @@ public class XLog {
    */
   public static Logger.Builder enableThreadInfo() {
     return new Logger.Builder().enableThreadInfo();
-  }
-
-  /**
-   * Start to customize a {@link Logger} and disable thread info.
-   *
-   * @return the {@link Logger.Builder} to build the {@link Logger}
-   * @deprecated use {@link #disableThreadInfo()} instead, since 1.7.0
-   */
-  @Deprecated
-  public static Logger.Builder nt() {
-    return disableThreadInfo();
   }
 
   /**
@@ -325,18 +277,6 @@ public class XLog {
   }
 
   /**
-   * Start to customize a {@link Logger} and enable stack trace.
-   *
-   * @param depth the number of stack trace elements we should log, 0 if no limitation
-   * @return the {@link Logger.Builder} to build the {@link Logger}
-   * @deprecated use {@link #enableStackTrace(int)} instead, since 1.7.0
-   */
-  @Deprecated
-  public static Logger.Builder st(int depth) {
-    return enableStackTrace(depth);
-  }
-
-  /**
    * Start to customize a {@link Logger} and enable stack trace, the stack trace would be printed
    * with the log message.
    *
@@ -347,24 +287,6 @@ public class XLog {
    */
   public static Logger.Builder enableStackTrace(int depth) {
     return new Logger.Builder().enableStackTrace(depth);
-  }
-
-  /**
-   * Start to customize a {@link Logger} and enable stack trace.
-   *
-   * @param stackTraceOrigin the origin of stack trace elements from which we should NOT log,
-   *                         it can be a package name like "com.elvishew.xlog", a class name
-   *                         like "com.yourdomain.logWrapper", or something else between
-   *                         package name and class name, like "com.yourdomain.".
-   *                         It is mostly used when you are using a logger wrapper
-   * @param depth            the number of stack trace elements we should log, 0 if no limitation
-   * @return the {@link Logger.Builder} to build the {@link Logger}
-   * @since 1.4.0
-   * @deprecated use {@link #enableStackTrace(String, int)} instead, since 1.7.0
-   */
-  @Deprecated
-  public static Logger.Builder st(String stackTraceOrigin, int depth) {
-    return enableStackTrace(stackTraceOrigin, depth);
   }
 
   /**
@@ -386,17 +308,6 @@ public class XLog {
   }
 
   /**
-   * Start to customize a {@link Logger} and disable stack trace.
-   *
-   * @return the {@link Logger.Builder} to build the {@link Logger}
-   * @deprecated use {@link #disableStackTrace()} instead, since 1.7.0
-   */
-  @Deprecated
-  public static Logger.Builder nst() {
-    return disableStackTrace();
-  }
-
-  /**
    * Start to customize a {@link Logger} and disable stack trace, the stack trace won't be printed
    * with the log message.
    *
@@ -405,17 +316,6 @@ public class XLog {
    */
   public static Logger.Builder disableStackTrace() {
     return new Logger.Builder().disableStackTrace();
-  }
-
-  /**
-   * Start to customize a {@link Logger} and enable border.
-   *
-   * @return the {@link Logger.Builder} to build the {@link Logger}
-   * @deprecated use {@link #enableBorder()} instead, since 1.7.0
-   */
-  @Deprecated
-  public static Logger.Builder b() {
-    return enableBorder();
   }
 
   /**
@@ -428,17 +328,6 @@ public class XLog {
    */
   public static Logger.Builder enableBorder() {
     return new Logger.Builder().enableBorder();
-  }
-
-  /**
-   * Start to customize a {@link Logger} and disable border.
-   *
-   * @return the {@link Logger.Builder} to build the {@link Logger}
-   * @deprecated use {@link #disableBorder()} instead, since 1.7.0
-   */
-  @Deprecated
-  public static Logger.Builder nb() {
-    return disableBorder();
   }
 
   /**
@@ -898,132 +787,5 @@ public class XLog {
   public static void xml(String xml) {
     assertInitialization();
     sLogger.xml(xml);
-  }
-
-  /**
-   * Compatible class with {@link android.util.Log}.
-   *
-   * @deprecated please use {@link XLog} instead
-   */
-  public static class Log {
-
-    /**
-     * @deprecated compatible with {@link android.util.Log#v(String, String)}
-     */
-    public static void v(String tag, String msg) {
-      tag(tag).build().v(msg);
-    }
-
-    /**
-     * @deprecated compatible with {@link android.util.Log#v(String, String, Throwable)}
-     */
-    public static void v(String tag, String msg, Throwable tr) {
-      tag(tag).build().v(msg, tr);
-    }
-
-    /**
-     * @deprecated compatible with {@link android.util.Log#d(String, String)}
-     */
-    public static void d(String tag, String msg) {
-      tag(tag).build().d(msg);
-    }
-
-    /**
-     * @deprecated compatible with {@link android.util.Log#d(String, String, Throwable)}
-     */
-    public static void d(String tag, String msg, Throwable tr) {
-      tag(tag).build().d(msg, tr);
-    }
-
-    /**
-     * @deprecated compatible with {@link android.util.Log#i(String, String)}
-     */
-    public static void i(String tag, String msg) {
-      tag(tag).build().i(msg);
-    }
-
-    /**
-     * @deprecated compatible with {@link android.util.Log#i(String, String, Throwable)}
-     */
-    public static void i(String tag, String msg, Throwable tr) {
-      tag(tag).build().i(msg, tr);
-    }
-
-    /**
-     * @deprecated compatible with {@link android.util.Log#w(String, String)}
-     */
-    public static void w(String tag, String msg) {
-      tag(tag).build().w(msg);
-    }
-
-    /**
-     * @deprecated compatible with {@link android.util.Log#w(String, String, Throwable)}
-     */
-    public static void w(String tag, String msg, Throwable tr) {
-      tag(tag).build().w(msg, tr);
-    }
-
-    /**
-     * @deprecated compatible with {@link android.util.Log#w(String, Throwable)}
-     */
-    public static void w(String tag, Throwable tr) {
-      tag(tag).build().w("", tr);
-    }
-
-    /**
-     * @deprecated compatible with {@link android.util.Log#e(String, String)}
-     */
-    public static void e(String tag, String msg) {
-      tag(tag).build().e(msg);
-    }
-
-    /**
-     * @deprecated compatible with {@link android.util.Log#e(String, String, Throwable)}
-     */
-    public static void e(String tag, String msg, Throwable tr) {
-      tag(tag).build().e(msg, tr);
-    }
-
-    /**
-     * @deprecated compatible with {@link android.util.Log#wtf(String, String)}
-     */
-    public static void wtf(String tag, String msg) {
-      e(tag, msg);
-    }
-
-    /**
-     * @deprecated compatible with {@link android.util.Log#wtf(String, Throwable)}
-     */
-    public static void wtf(String tag, Throwable tr) {
-      wtf(tag, "", tr);
-    }
-
-    /**
-     * @deprecated compatible with {@link android.util.Log#wtf(String, String, Throwable)}
-     */
-    public static void wtf(String tag, String msg, Throwable tr) {
-      e(tag, msg, tr);
-    }
-
-    /**
-     * @deprecated compatible with {@link android.util.Log#println(int, String, String)}
-     */
-    public static void println(int logLevel, String tag, String msg) {
-      tag(tag).build().println(logLevel, msg);
-    }
-
-    /**
-     * @deprecated compatible with {@link android.util.Log#isLoggable(String, int)}
-     */
-    public static boolean isLoggable(String tag, int level) {
-      return sLogConfiguration.isLoggable(level);
-    }
-
-    /**
-     * @deprecated compatible with {@link android.util.Log#getStackTraceString(Throwable)}
-     */
-    public static String getStackTraceString(Throwable tr) {
-      return StackTraceUtil.getStackTraceString(tr);
-    }
   }
 }

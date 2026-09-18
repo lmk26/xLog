@@ -83,7 +83,7 @@ import java.util.regex.Pattern;
  *
  * @since 1.3.0
  */
-public class PatternFlattener implements Flattener, Flattener2 {
+public class PatternFlattener implements Flattener {
 
   private static final String PARAM = "[^{}]*";
   private static final Pattern PARAM_REGEX = Pattern.compile("\\{(" + PARAM + ")\\}");
@@ -235,11 +235,6 @@ public class PatternFlattener implements Flattener, Flattener2 {
       return new MessageFiller(wrappedParameter, trimmedParameter);
     }
     return null;
-  }
-
-  @Override
-  public CharSequence flatten(int logLevel, String tag, String message) {
-    return flatten(System.currentTimeMillis(), logLevel, tag, message);
   }
 
   @Override

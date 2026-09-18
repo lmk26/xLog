@@ -17,14 +17,14 @@
 package com.elvishew.xlog.printer.file.backup;
 
 /**
- * An abstract {@link BackupStrategy2}, simply append '.bak.n' to the end of normal file name when
+ * An abstract {@link BackupStrategy}, simply append '.bak.n' to the end of normal file name when
  * naming a backup with index n.
  * <p>
- * Developers can simply extend this class when defining their own {@link BackupStrategy2}.
+ * Developers can simply extend this class when defining their own {@link BackupStrategy}.
  *
  * @since 1.9.0
  */
-public abstract class AbstractBackupStrategy implements BackupStrategy2 {
+public abstract class AbstractBackupStrategy implements BackupStrategy {
 
   @Override
   public String getBackupFileName(String fileName, int backupIndex) {

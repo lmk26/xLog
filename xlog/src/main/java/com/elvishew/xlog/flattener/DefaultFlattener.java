@@ -23,12 +23,7 @@ import com.elvishew.xlog.LogLevel;
  *
  * @since 1.3.0
  */
-public class DefaultFlattener implements Flattener, Flattener2 {
-
-  @Override
-  public CharSequence flatten(int logLevel, String tag, String message) {
-    return flatten(System.currentTimeMillis(), logLevel, tag, message);
-  }
+public class DefaultFlattener implements Flattener {
 
   @Override
   public CharSequence flatten(long timeMillis, int logLevel, String tag, String message) {

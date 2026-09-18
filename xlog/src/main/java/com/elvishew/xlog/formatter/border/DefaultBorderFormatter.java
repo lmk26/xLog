@@ -30,7 +30,7 @@ import com.elvishew.xlog.internal.SystemCompat;
  */
 public class DefaultBorderFormatter implements BorderFormatter {
 
-  private static final char VERTICAL_BORDER_CHAR = '║';
+  private static final String VERTICAL_BORDER_CHAR = "║ ";
 
   // Length: 100.
   private static final String TOP_HORIZONTAL_BORDER =

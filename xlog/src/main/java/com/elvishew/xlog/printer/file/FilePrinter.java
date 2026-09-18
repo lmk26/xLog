@@ -17,14 +17,11 @@
 package com.elvishew.xlog.printer.file;
 
 import com.elvishew.xlog.flattener.Flattener;
-import com.elvishew.xlog.flattener.Flattener2;
 import com.elvishew.xlog.internal.DefaultsFactory;
 import com.elvishew.xlog.internal.Platform;
-import com.elvishew.xlog.internal.printer.file.backup.BackupStrategyWrapper;
 import com.elvishew.xlog.internal.printer.file.backup.BackupUtil;
 import com.elvishew.xlog.printer.Printer;
 import com.elvishew.xlog.printer.file.backup.BackupStrategy;
-import com.elvishew.xlog.printer.file.backup.BackupStrategy2;
 import com.elvishew.xlog.printer.file.clean.CleanStrategy;
 import com.elvishew.xlog.printer.file.naming.FileNameGenerator;
 import com.elvishew.xlog.printer.file.writer.Writer;
@@ -58,7 +55,7 @@ public class FilePrinter implements Printer {
   /**
    * The backup strategy for log file.
    */
-  private final BackupStrategy2 backupStrategy;
+  private final BackupStrategy backupStrategy;
 
   /**
    * The clean strategy for log file.
@@ -68,7 +65,7 @@ public class FilePrinter implements Printer {
   /**
    * The flattener when print a log.
    */
-  private Flattener2 flattener;
+  private Flattener flattener;
 
   /**
    * Log writer.
@@ -184,7 +181,7 @@ public class FilePrinter implements Printer {
     /**
      * The backup strategy for log file.
      */
-    BackupStrategy2 backupStrategy;
+    BackupStrategy backupStrategy;
 
     /**
      * The clean strategy for log file.
@@ -194,7 +191,7 @@ public class FilePrinter implements Printer {
     /**
      * The flattener when print a log.
      */
-    Flattener2 flattener;
+    Flattener flattener;
 
     /**
      * The writer to write log into log file.
@@ -228,12 +225,8 @@ public class FilePrinter implements Printer {
      * @return the builder
      */
     public Builder backupStrategy(BackupStrategy backupStrategy) {
-      if (!(backupStrategy instanceof BackupStrategy2)) {
-        backupStrategy = new BackupStrategyWrapper(backupStrategy);
-      }
-      this.backupStrategy = (BackupStrategy2) backupStrategy;
-
-      BackupUtil.verifyBackupStrategy(this.backupStrategy);
+      BackupUtil.verifyBackupStrategy(backupStrategy);
+      this.backupStrategy = backupStrategy;
       return this;
     }
 
@@ -254,27 +247,9 @@ public class FilePrinter implements Printer {
      *
      * @param flattener the flattener when print a log
      * @return the builder
-     * @deprecated {@link Flattener} is deprecated, use {@link #flattener(Flattener2)} instead,
-     * since 1.6.0
-     */
-    @Deprecated
-    public Builder logFlattener(final Flattener flattener) {
-      return flattener(new Flattener2() {
-        @Override
-        public CharSequence flatten(long timeMillis, int logLevel, String tag, String message) {
-          return flattener.flatten(logLevel, tag, message);
-        }
-      });
-    }
-
-    /**
-     * Set the flattener when print a log.
-     *
-     * @param flattener the flattener when print a log
-     * @return the builder
      * @since 1.6.0
      */
-    public Builder flattener(Flattener2 flattener) {
+    public Builder flattener(Flattener flattener) {
       this.flattener = flattener;
       return this;
     }
