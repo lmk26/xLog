@@ -1,22 +1,70 @@
 # XLog
 
-![](https://travis-ci.org/elvishew/xLog.svg?branch=master)
+[简体中文](README_ZH.md)
 
-[简体中文](https://github.com/elvishew/xLog/blob/master/README_ZH.md)
+> This is an unofficial maintained fork of [Elvis Hew's xLog](https://github.com/elvishew/xLog). The original project and this fork are licensed under the Apache License 2.0.
 
 Lightweight and pretty, powerful and flexible logger for android and java, can print the log to Logcat, Console and Files, or anywhere if you like.
 
 ## Logcat Output
 
-![](https://github.com/elvishew/XLog/blob/master/images/logcat-output.png)
+![](images/logcat-output.png)
 
 ## Quick Start
+
+Replace `<latest-version>` below with the latest stable version shown on [JitPack](https://jitpack.io/#lmk26/xLog).
 
 Dependency
 
 ```groovy
-implementation 'com.elvishew:xlog:1.11.1'
+// settings.gradle
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+// app/build.gradle
+dependencies {
+    implementation 'com.github.lmk26:xlog:<latest-version>'
+}
 ```
+
+`xlog-libcat` is an optional extension for intercepting `android.util.Log` calls. It also requires the LibCat Gradle plugin; see [LibCat](xlog-libcat/README.md) for setup details.
+
+```groovy
+dependencies {
+    implementation 'com.github.lmk26:xlog-libcat:<latest-version>'
+}
+```
+
+### Switching dependency sources in source builds
+
+Use `DEPENDENCY_TYPE` in `gradle.properties` to control the dependency source for the sample, LibCat, and the LibCat plugin:
+
+```properties
+GROUP=com.github.lmk26
+VERSION=<latest-version>
+
+# Use modules and the included build from this repository
+DEPENDENCY_TYPE=project
+```
+
+To use JitPack artifacts, change it to:
+
+```properties
+DEPENDENCY_TYPE=jitpack
+```
+
+To use artifacts from the local Maven repository, change it to:
+
+```properties
+DEPENDENCY_TYPE=mavenLocal
+```
+
+`GROUP` and `VERSION` are shared by dependency coordinates and Maven publication coordinates.
 
 Initialization
 
@@ -113,7 +161,8 @@ LogConfiguration config = new LogConfiguration.Builder()
     .addInterceptor(new MyInterceptor())                   // Add other log interceptor
     .build();
 
-Printer androidPrinter = new AndroidPrinter(true);         // Printer that print the log using android.util.Log
+Printer androidPrinter = new AsyncAndroidPrinter();        // Print on one worker thread without interleaving concurrent multiline logs
+// Use new AndroidPrinter(true) instead when synchronous printing is required
 Printer consolePrinter = new ConsolePrinter();             // Printer that print the log to console using System.out
 Printer filePrinter = new FilePrinter                      // Printer that print(save) the log to file
     .Builder("<path-to-logs-dir>")                         // Specify the directory path of log file(s)
@@ -231,13 +280,14 @@ XLog.printer(filePrinter).d("Message with one-time-use printers");
 
 ### Save third party logs
 
-You can config `LibCat` after initializing `XLog`.
+After applying the LibCat Gradle plugin, configure `LibCat` after initializing `XLog`.
 
 ```java
 LibCat.config(true, filePrinter);
+Log.d("LibCat", "This log remains in Logcat and is also saved to the file");
 ```
 
-Then, the logs logged by third party modules/libraries(within same app) will be saved to file too.
+The plugin uses the AGP Instrumentation API and ASM to redirect `android.util.Log` calls in project and dependency classes during compilation, so third-party logs can also be saved to the file.
 
 Go to [LibCat] for more details.
 
@@ -444,7 +494,7 @@ grep -rl "android.util.Log" <your-source-directory> | xargs sed -i "" "s/android
 
 Optionally, instead of replacing all 'android.util.Log', you can just use [LibCat] to intercept all logs logged by `android.util.Log` and redirect them to `XLog`'s `Printer`.
 
-## [Issues](https://github.com/elvishew/xLog/issues)
+## [Issues](https://github.com/lmk26/xLog/issues)
 
 If you meet any problem when using XLog, or have any suggestion, please feel free to create an issue.  
 Before creating an issue, please check if there is an existed one.
@@ -474,6 +524,6 @@ limitations under the License.
 </pre>
 
 [Android Log]: http://developer.android.com/reference/android/util/Log.html
-[XLog]: https://github.com/elvishew/xLog/blob/master/xlog/src/main/java/com/elvishew/xlog/XLog.java
-[Logger]: https://github.com/elvishew/xLog/blob/master/xlog/src/main/java/com/elvishew/xlog/Logger.java
-[LibCat]: https://github.com/elvishew/xLog/blob/master/xlog-libcat/README.md
+[XLog]: xlog/src/main/java/com/elvishew/xlog/XLog.java
+[Logger]: xlog/src/main/java/com/elvishew/xlog/Logger.java
+[LibCat]: xlog-libcat/README.md

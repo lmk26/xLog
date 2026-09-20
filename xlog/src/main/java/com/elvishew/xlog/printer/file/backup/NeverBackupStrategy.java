@@ -23,10 +23,20 @@ import java.io.File;
  *
  * @since 1.3.0
  */
-public class NeverBackupStrategy {
+public class NeverBackupStrategy implements BackupStrategy {
 
   @Override
   public boolean shouldBackup(File file) {
     return false;
+  }
+
+  @Override
+  public int getMaxBackupIndex() {
+    return 0;
+  }
+
+  @Override
+  public String getBackupFileName(String fileName, int backupIndex) {
+    return "";
   }
 }

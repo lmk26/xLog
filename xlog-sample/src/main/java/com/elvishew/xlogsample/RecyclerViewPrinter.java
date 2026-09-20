@@ -25,7 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.elvishew.xlog.LogLevel;
-import com.elvishew.xlog.flattener.Flattener2;
+import com.elvishew.xlog.flattener.Flattener;
 import com.elvishew.xlog.flattener.PatternFlattener;
 import com.elvishew.xlog.printer.Printer;
 
@@ -62,7 +62,7 @@ public class RecyclerViewPrinter implements Printer {
 
   private static class LogItem {
 
-    static Flattener2 flattener = new PatternFlattener("{d HH:mm:ss.SSS} {l}/{t}: ");
+    static Flattener flattener = new PatternFlattener("{d HH:mm:ss.SSS} {l}/{t}: ");
 
     long timeMillis;
     int logLevel;

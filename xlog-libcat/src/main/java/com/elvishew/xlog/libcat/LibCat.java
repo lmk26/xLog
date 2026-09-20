@@ -24,7 +24,8 @@ import com.elvishew.xlog.printer.Printer;
  * <p>
  * Call {@link #config(boolean, Printer)} to config LibCat when initializing app.
  * <p>
- * Please note that LibCat only work after you apply the 'android-aspectjx' plugin in your app's 'build.gradle'.
+ * Please note that LibCat only works after you apply the
+ * {@code com.github.lmk26.xlog.libcat} plugin to your app module.
  */
 public class LibCat {
 

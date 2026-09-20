@@ -22,8 +22,9 @@ import com.elvishew.xlog.printer.file.FilePrinter;
  * A printer is used for printing the log to somewhere, like android shell, terminal
  * or file system.
  * <p>
- * There are 4 main implementation of Printer.
+ * There are 5 main implementation of Printer.
  * <br>{@link AndroidPrinter}, print log to android shell terminal.
+ * <br>{@link AsyncAndroidPrinter}, asynchronously print log to android shell terminal.
  * <br>{@link ConsolePrinter}, print log to console via System.out.
  * <br>{@link FilePrinter}, print log to file system.
  * <br>{@link RemotePrinter}, print log to remote server, this is empty implementation yet.

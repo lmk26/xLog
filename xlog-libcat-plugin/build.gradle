@@ -1,0 +1,40 @@
+import java.util.Properties
+
+plugins {
+    id 'java-gradle-plugin'
+    id 'maven-publish'
+}
+
+def rootProperties = new Properties()
+file('../gradle.properties').withInputStream { rootProperties.load(it) }
+
+group = rootProperties.getProperty('GROUP')
+version = rootProperties.getProperty('VERSION')
+
+repositories {
+    google()
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+    withSourcesJar()
+}
+
+gradlePlugin {
+    plugins {
+        libCat {
+            id = 'com.github.lmk26.xlog.libcat'
+            implementationClass = 'com.elvishew.xlog.libcat.plugin.LibCatPlugin'
+            displayName = 'xLog LibCat Plugin'
+            description = 'Redirects android.util.Log calls to xLog LibCat using AGP instrumentation'
+        }
+    }
+}
+
+dependencies {
+    compileOnly 'com.android.tools.build:gradle:9.4.1'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.ow2.asm:asm:9.10.1'
+}

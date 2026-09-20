@@ -15,7 +15,7 @@
  */
 
 apply plugin: 'com.android.library'
-//apply from: '../maven-push.gradle'
+apply plugin: 'maven-publish'
 
 android {
     namespace 'com.elvishew.xlog.libcat'
@@ -36,6 +36,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
         }
     }
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+        }
+    }
     lint {
         targetSdk 37
     }
@@ -45,6 +50,47 @@ android {
 }
 
 dependencies {
-    api 'com.elvishew:xlog:1.11.1'
-    api 'org.aspectj:aspectjrt:1.9.5'
+    if (DEPENDENCY_TYPE == 'project') {
+        api project(':xlog')
+    } else {
+        api "${GROUP}:xlog:${VERSION}"
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = GROUP
+                artifactId = POM_ARTIFACT_ID
+                version = VERSION
+
+                pom {
+                    name = POM_NAME
+                    description = POM_DESCRIPTION
+                    url = POM_URL
+                    licenses {
+                        license {
+                            name = POM_LICENCE_NAME
+                            url = POM_LICENCE_URL
+                            distribution = POM_LICENCE_DIST
+                        }
+                    }
+                    scm {
+                        url = POM_SCM_URL
+                        connection = POM_SCM_CONNECTION
+                        developerConnection = POM_SCM_DEV_CONNECTION
+                    }
+                    developers {
+                        developer {
+                            id = POM_DEVELOPER_ID
+                            name = POM_DEVELOPER_NAME
+                            url = POM_DEVELOPER_URL
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

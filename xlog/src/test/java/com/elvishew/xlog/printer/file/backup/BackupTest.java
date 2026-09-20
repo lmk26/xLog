@@ -16,6 +16,8 @@
 
 package com.elvishew.xlog.printer.file.backup;
 
+import static org.junit.Assert.assertEquals;
+
 import com.elvishew.xlog.internal.printer.file.backup.BackupStrategyWrapper;
 import com.elvishew.xlog.internal.printer.file.backup.BackupUtil;
 
@@ -24,8 +26,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-
-import static org.junit.Assert.assertEquals;
 
 public class BackupTest {
 
@@ -52,10 +52,20 @@ public class BackupTest {
 
   @Test
   public void testBackupOld() throws Exception {
-    BackupStrategy2 backupStrategy = new BackupStrategyWrapper(new BackupStrategy() {
+    BackupStrategy backupStrategy = new BackupStrategyWrapper(new BackupStrategy() {
       @Override
       public boolean shouldBackup(File file) {
         return true;
+      }
+
+      @Override
+      public int getMaxBackupIndex() {
+        return 0;
+      }
+
+      @Override
+      public String getBackupFileName(String fileName, int backupIndex) {
+        return "";
       }
     });
 
@@ -72,7 +82,7 @@ public class BackupTest {
 
   @Test
   public void testBackupMaxIndex1() throws Exception {
-    BackupStrategy2 backupStrategy = new AbstractBackupStrategy() {
+    BackupStrategy backupStrategy = new AbstractBackupStrategy() {
       @Override
       public int getMaxBackupIndex() {
         return 1;
@@ -97,7 +107,7 @@ public class BackupTest {
 
   @Test
   public void testBackupMaxIndex2() throws Exception {
-    BackupStrategy2 backupStrategy = new AbstractBackupStrategy() {
+    BackupStrategy backupStrategy = new AbstractBackupStrategy() {
       @Override
       public int getMaxBackupIndex() {
         return 2;
@@ -126,7 +136,7 @@ public class BackupTest {
 
   @Test
   public void testBackupMaxIndex5() throws Exception {
-    BackupStrategy2 backupStrategy = new AbstractBackupStrategy() {
+    BackupStrategy backupStrategy = new AbstractBackupStrategy() {
       @Override
       public int getMaxBackupIndex() {
         return 5;
@@ -167,7 +177,7 @@ public class BackupTest {
 
   @Test
   public void testBackupMaxIndex5WithMissingFile() throws Exception {
-    BackupStrategy2 backupStrategy = new AbstractBackupStrategy() {
+    BackupStrategy backupStrategy = new AbstractBackupStrategy() {
       @Override
       public int getMaxBackupIndex() {
         return 5;
@@ -235,7 +245,7 @@ public class BackupTest {
 
   @Test
   public void testBackupMaxIndexNoLimit() throws Exception {
-    BackupStrategy2 backupStrategy = new AbstractBackupStrategy() {
+    BackupStrategy backupStrategy = new AbstractBackupStrategy() {
       @Override
       public int getMaxBackupIndex() {
         return NO_LIMIT;
@@ -276,7 +286,7 @@ public class BackupTest {
 
   @Test
   public void testBackupMaxIndexNoLimitWithMissingFile() throws Exception {
-    BackupStrategy2 backupStrategy = new AbstractBackupStrategy() {
+    BackupStrategy backupStrategy = new AbstractBackupStrategy() {
       @Override
       public int getMaxBackupIndex() {
         return NO_LIMIT;
@@ -338,7 +348,7 @@ public class BackupTest {
     assertFilesCount(6);
   }
 
-  private void assertFiles(int fileCount, BackupStrategy2 backupStrategy) {
+  private void assertFiles(int fileCount, BackupStrategy backupStrategy) {
     assertFilesCount(fileCount);
     for (int i = 1; i <= fileCount; i++) {
       assertFileExists(backupStrategy, i);
@@ -352,7 +362,7 @@ public class BackupTest {
     assertEquals(filesCount, files.length);
   }
 
-  private void assertFileExists(BackupStrategy2 backupStrategy, int index) {
+  private void assertFileExists(BackupStrategy backupStrategy, int index) {
     File file = new File(logPath, backupStrategy.getBackupFileName(logFileName, index));
     assert file.exists();
   }

@@ -155,6 +155,7 @@ public class LogConfiguration {
    * @return the object formatter for the object, or null if not found
    * @since 1.1.0
    */
+  @SuppressWarnings("unchecked")
   public <T> ObjectFormatter<? super T> getObjectFormatter(T object) {
     if (objectFormatters == null) {
       return null;
@@ -184,6 +185,7 @@ public class LogConfiguration {
   /**
    * Builder for {@link LogConfiguration}.
    */
+  @SuppressWarnings("UnusedReturnValue")
   public static class Builder {
 
     private static final int DEFAULT_LOG_LEVEL = LogLevel.ALL;
@@ -332,16 +334,6 @@ public class LogConfiguration {
     }
 
     /**
-     * Enable thread info.
-     *
-     * @return the builder
-     * @deprecated use {@link #enableThreadInfo()} instead, since 1.7.1
-     */
-    public Builder t() {
-      return enableThreadInfo();
-    }
-
-    /**
      * Enable thread info, the thread info would be printed with the log message.
      *
      * @return the builder
@@ -351,16 +343,6 @@ public class LogConfiguration {
     public Builder enableThreadInfo() {
       this.withThread = true;
       return this;
-    }
-
-    /**
-     * Disable thread info.
-     *
-     * @return the builder
-     * @deprecated use {@link #disableThreadInfo()} instead, since 1.7.1
-     */
-    public Builder nt() {
-      return disableThreadInfo();
     }
 
     /**
@@ -375,18 +357,6 @@ public class LogConfiguration {
     }
 
     /**
-     * Enable stack trace.
-     *
-     * @param depth the number of stack trace elements we should log, 0 if no limitation
-     * @return the builder
-     * @deprecated use {@link #enableStackTrace(int)} instead, since 1.7.1
-     */
-    public Builder st(int depth) {
-      enableStackTrace(depth);
-      return this;
-    }
-
-    /**
      * Enable stack trace, the stack trace would be printed with the log message.
      *
      * @param depth the number of stack trace elements we should log, 0 if no limitation
@@ -397,23 +367,6 @@ public class LogConfiguration {
     public Builder enableStackTrace(int depth) {
       enableStackTrace(null, depth);
       return this;
-    }
-
-    /**
-     * Enable stack trace.
-     *
-     * @param stackTraceOrigin the origin of stack trace elements from which we should NOT log when
-     *                         logging with stack trace, it can be a package name like
-     *                         "com.elvishew.xlog", a class name like "com.yourdomain.logWrapper",
-     *                         or something else between package name and class name, like "com.yourdomain.".
-     *                         It is mostly used when you are using a logger wrapper
-     * @param depth            the number of stack trace elements we should log, 0 if no limitation
-     * @return the builder
-     * @since 1.4.0
-     * @deprecated use {@link #enableStackTrace(String, int)} instead, since 1.7.1
-     */
-    public Builder st(String stackTraceOrigin, int depth) {
-      return enableStackTrace(stackTraceOrigin, depth);
     }
 
     /**
@@ -437,16 +390,6 @@ public class LogConfiguration {
     }
 
     /**
-     * Disable stack trace.
-     *
-     * @return the builder
-     * @deprecated use {@link #disableStackTrace()} instead, since 1.7.1
-     */
-    public Builder nst() {
-      return disableStackTrace();
-    }
-
-    /**
      * Disable stack trace, the stack trace won't be printed with the log message.
      *
      * @return the builder
@@ -461,16 +404,6 @@ public class LogConfiguration {
     }
 
     /**
-     * Enable border.
-     *
-     * @return the builder
-     * @deprecated use {@link #enableBorder()} instead, since 1.7.1
-     */
-    public Builder b() {
-      return enableBorder();
-    }
-
-    /**
      * Enable border, the border would surround the entire log content, and separate the log
      * message, thread info and stack trace.
      *
@@ -481,16 +414,6 @@ public class LogConfiguration {
     public Builder enableBorder() {
       this.withBorder = true;
       return this;
-    }
-
-    /**
-     * Disable border.
-     *
-     * @return the builder
-     * @deprecated use {@link #disableBorder()} instead, since 1.7.1
-     */
-    public Builder nb() {
-      return disableBorder();
     }
 
     /**

@@ -1,0 +1,6 @@
+jdk:
+  - openjdk21
+
+install:
+  - ./gradlew :xlog:publishReleasePublicationToMavenLocal :xlog-libcat:publishReleasePublicationToMavenLocal
+  - ./gradlew -p xlog-libcat-plugin publishToMavenLocal

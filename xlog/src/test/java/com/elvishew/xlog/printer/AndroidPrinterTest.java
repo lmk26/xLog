@@ -16,6 +16,10 @@
 
 package com.elvishew.xlog.printer;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import com.elvishew.xlog.AssertUtil;
 import com.elvishew.xlog.LogItem;
 import com.elvishew.xlog.LogLevel;
@@ -27,9 +31,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class AndroidPrinterTest {
 
@@ -88,5 +93,47 @@ public class AndroidPrinterTest {
 
       start = end;
     }
+  }
+
+  @Test
+  public void testConcurrentMultilineMessagesMayInterleave() throws Exception {
+    final List<String> chunks = Collections.synchronizedList(new ArrayList<String>());
+    final CountDownLatch firstChunksPrinted = new CountDownLatch(2);
+    final AndroidPrinter printer = new AndroidPrinter(true) {
+      @Override
+      void printChunk(int logLevel, String tag, String msg) {
+        chunks.add(msg);
+        if (msg.endsWith("-1")) {
+          firstChunksPrinted.countDown();
+          try {
+            firstChunksPrinted.await(1, TimeUnit.SECONDS);
+          } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+          }
+        }
+      }
+    };
+
+    Thread firstThread = createPrintThread(printer, "first-1\nfirst-2");
+    Thread secondThread = createPrintThread(printer, "second-1\nsecond-2");
+    firstThread.start();
+    secondThread.start();
+    firstThread.join(2000);
+    secondThread.join(2000);
+
+    assertFalse(firstThread.isAlive());
+    assertFalse(secondThread.isAlive());
+    assertEquals(4, chunks.size());
+    assertTrue(chunks.subList(0, 2).contains("first-1"));
+    assertTrue(chunks.subList(0, 2).contains("second-1"));
+  }
+
+  private Thread createPrintThread(final AndroidPrinter printer, final String msg) {
+    return new Thread(new Runnable() {
+      @Override
+      public void run() {
+        printer.println(LogLevel.DEBUG, "tag", msg);
+      }
+    });
   }
 }

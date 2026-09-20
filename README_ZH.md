@@ -1,22 +1,70 @@
 # XLog
 
-![](https://travis-ci.org/elvishew/xLog.svg?branch=master)
+[English](README.md)
 
-[English](https://github.com/elvishew/xLog/blob/master/README.md)
+> 这是 [Elvis Hew 的 xLog](https://github.com/elvishew/xLog) 的非官方维护分支。原项目及本分支均使用 Apache License 2.0。
 
 轻量、美观强大、可扩展的 Android 和 Java 日志库，可同时将日志打印在如 Logcat、Console 和文件中。如果你愿意，你可以将日志打印到任何地方。
 
 ## Logcat 输出
 
-![](https://github.com/elvishew/XLog/blob/master/images/logcat-output.png)
+![](images/logcat-output.png)
 
 ## 快速开始
+
+请将下面的 `<latest-version>` 替换为 [JitPack](https://jitpack.io/#lmk26/xLog) 中最新的稳定版本号。
 
 依赖
 
 ```groovy
-implementation 'com.elvishew:xlog:1.11.1'
+// settings.gradle
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+// app/build.gradle
+dependencies {
+    implementation 'com.github.lmk26:xlog:<latest-version>'
+}
 ```
+
+`xlog-libcat` 是用于拦截 `android.util.Log` 调用的可选扩展，还需要应用 LibCat Gradle 插件，具体配置参见 [LibCat](xlog-libcat/README_ZH.md)。
+
+```groovy
+dependencies {
+    implementation 'com.github.lmk26:xlog-libcat:<latest-version>'
+}
+```
+
+### 源码构建时切换依赖来源
+
+通过 `gradle.properties` 中的 `DEPENDENCY_TYPE` 控制 sample、LibCat 和 LibCat 插件的依赖来源：
+
+```properties
+GROUP=com.github.lmk26
+VERSION=<latest-version>
+
+# 直接使用当前仓库模块及 included build 插件
+DEPENDENCY_TYPE=project
+```
+
+使用 JitPack 制品时改为：
+
+```properties
+DEPENDENCY_TYPE=jitpack
+```
+
+使用本机 Maven 仓库中的制品时改为：
+
+```properties
+DEPENDENCY_TYPE=mavenLocal
+```
+
+`GROUP` 和 `VERSION` 同时用于依赖坐标及 Maven 发布坐标。
 
 初始化
 
@@ -113,7 +161,8 @@ LogConfiguration config = new LogConfiguration.Builder()
     .addInterceptor(new MyInterceptor())                   // 添加一个日志拦截器
     .build();
 
-Printer androidPrinter = new AndroidPrinter(true);         // 通过 android.util.Log 打印日志的打印器
+Printer androidPrinter = new AsyncAndroidPrinter();        // 使用单工作线程异步打印，避免并发多行日志交错
+// 如需同步打印，可改用 new AndroidPrinter(true)
 Printer consolePrinter = new ConsolePrinter();             // 通过 System.out 打印日志到控制台的打印器
 Printer filePrinter = new FilePrinter                      // 打印日志到文件的打印器
     .Builder("<日志目录全路径>")                             // 指定保存日志文件的路径
@@ -231,13 +280,14 @@ XLog.printer(filePrinter).d("用一次性配置打印的消息");
 
 ### 保存第三方库打印的日志到文件
 
-你可以在初始化 `XLog` 后配置 `LibCat`。
+应用 LibCat Gradle 插件后，可以在初始化 `XLog` 后配置 `LibCat`。
 
 ```java
 LibCat.config(true, filePrinter);
+Log.d("LibCat", "这条日志会保留在 Logcat，并同时保存到文件");
 ```
 
-然后，由第三方库/模块（在同一个 app 里）打印的日志也将会被保存到文件中。
+插件通过 AGP Instrumentation API 和 ASM 在编译阶段重定向项目及依赖库中的 `android.util.Log` 调用，因此第三方库/模块打印的日志也会保存到文件中。
 
 点击 [LibCat] 了解更多细节。
 
@@ -443,7 +493,7 @@ grep -rl "android.util.Log" <your-source-directory> | xargs sed -i "" "s/android
 
 相比替换掉所有 'android.util.Log'，还有另一种方式。你可以使用 [LibCat] 拦截所有通过 `android.util.Log` 打印的日志，将他们重定向到 `XLog` 的 `Printer`。
 
-## [Issues](https://github.com/elvishew/xLog/issues)
+## [Issues](https://github.com/lmk26/xLog/issues)
 
 如果你在使用过程中遇到任何问题或者有任何建议，请创建一个 Issue。
 在创建 Issue 前，请检查类似 Issue 是否已经存在.
@@ -451,12 +501,6 @@ grep -rl "android.util.Log" <your-source-directory> | xargs sed -i "" "s/android
 ## 第三方详解
 
 * [XLog 详解及源码分析](https://www.jianshu.com/p/15ff181cc2f8)
-
-## QQ 交流互助群
-
-![](https://github.com/elvishew/XLog/blob/master/images/qq_group.jpg)
-
-如果你在阅读完文档后仍有用法上的疑问，可加入此 QQ 群进行提问。进群答案为 `elvishew`
 
 ## License
 
@@ -477,6 +521,6 @@ limitations under the License.
 </pre>
 
 [Android Log]: http://developer.android.com/reference/android/util/Log.html
-[XLog]: https://github.com/elvishew/xLog/blob/master/xlog/src/main/java/com/elvishew/xlog/XLog.java
-[Logger]: https://github.com/elvishew/xLog/blob/master/xlog/src/main/java/com/elvishew/xlog/Logger.java
-[LibCat]: https://github.com/elvishew/xLog/blob/master/xlog-libcat/README_ZH.md
+[XLog]: xlog/src/main/java/com/elvishew/xlog/XLog.java
+[Logger]: xlog/src/main/java/com/elvishew/xlog/Logger.java
+[LibCat]: xlog-libcat/README_ZH.md

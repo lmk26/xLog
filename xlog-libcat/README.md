@@ -1,6 +1,6 @@
 # LibCat
 
-[简体中文](https://github.com/elvishew/XLog/blob/master/xlog-libcat/README_ZH.md)
+[简体中文](README_ZH.md)
 
 Intercept the logs directly logged by `android.util.Log` within whole app's code, and redirect the logs to specified `Printer`.
 
@@ -10,42 +10,45 @@ About `Printer`s, see more in [XLog].
 
 ## Quick Start
 
-Add in build.gradle
+Replace `<latest-version>` below with the latest stable version shown on [JitPack](https://jitpack.io/#lmk26/xLog).
+
+Add JitPack to plugin and dependency resolution in `settings.gradle`:
 
 ```groovy
-apply plugin: 'android-aspectjx'
-
-android {
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-}
-
-buildscript {
+pluginManagement {
     repositories {
-        jcenter()
         google()
-    }
-    dependencies {
-        classpath 'com.hujiang.aspectjx:gradle-android-plugin-aspectjx:2.0.10'
+        mavenCentral()
+        gradlePluginPortal()
+        maven { url 'https://jitpack.io' }
     }
 }
 
-aspectjx {
-    // if you use kotlin in your project make sure to exclude `kotlin`,
-    // otherwise a build error `zip file is empty` will be thrown
-    exclude 'kotlin'
-
-    // add 'exclude' packages/classes that you don't want to intercept the logs from
-    exclude 'androidx.appcompat'
-    exclude 'android.support'
-
-    // or add 'include' packages/classes that you want to intercept the logs from
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
 }
+```
+
+Declare the plugin in the root `build.gradle`:
+
+```groovy
+plugins {
+    id 'com.github.lmk26.xlog.libcat' version '<latest-version>' apply false
+}
+```
+
+Apply the plugin and add LibCat in the app module:
+
+```groovy
+apply plugin: 'com.github.lmk26.xlog.libcat'
 
 dependencies {
-    implementation 'com.elvishew:xlog-libcat:1.0.0'
+    implementation 'com.github.lmk26:xlog-libcat:<latest-version>'
 }
 ```
 
@@ -53,9 +56,12 @@ Config when initializing app
 
 ```java
 LibCat.config(true, printer);
+
+// This call remains in Logcat and is also forwarded to printer.
+Log.d("LibCat", "This log is intercepted by LibCat");
 ```
 
-Then, all future logs logged by `android.util.Log` will be redirected to `printer`.
+The plugin will then redirect supported `android.util.Log` calls to LibCat during compilation.
 
 ## Examples
 
@@ -83,14 +89,9 @@ LibCat.config(false, printer);
 LibCat.config(false, null);
 ```
 
-## References
-
-[AspectJ]
-
-[AspectJX]
-
 ## Attention
-During compiling app, [AspectJ] will remove all callings of `android.util.Log` and replace with `LibCat` logic. No source code will be changed, but only bytecode.
+
+During compilation, the LibCat Gradle plugin uses the AGP Instrumentation API and ASM to replace supported `android.util.Log` calls with LibCat calls. Source code is not changed. Both project classes and library dependencies are instrumented, while xLog's own classes are excluded to avoid recursive interception.
 
 ## License
 
@@ -110,7 +111,5 @@ See the License for the specific language governing permissions and
 limitations under the License.
 </pre>
 
-[AspectJ]: https://www.eclipse.org/aspectj/
-[AspectJX]: https://github.com/HujiangTechnology/gradle_plugin_android_aspectjx
-[Printer]: https://github.com/elvishew/XLog/blob/master/xlog/src/main/java/com/elvishew/xlog/printer/Printer.java
-[XLog]: https://github.com/elvishew/xLog/blob/master/README.md
+[Printer]: ../xlog/src/main/java/com/elvishew/xlog/printer/Printer.java
+[XLog]: ../README.md

@@ -18,6 +18,7 @@ package com.elvishew.xlogsample;
 
 import android.app.Application;
 import android.os.Build;
+import android.util.Log;
 
 import com.elvishew.xlog.LogConfiguration;
 import com.elvishew.xlog.LogLevel;
@@ -105,6 +106,9 @@ public class XLogSampleApplication extends Application {
     globalFilePrinter = filePrinter;
 
     // Intercept all logs(including logs logged by third party modules/libraries) and print them to file.
-    LibCat.config(true, filePrinter);
+    LibCat.config(true, androidPrinter);
+
+    // This android.util.Log call will be redirected to LibCat by the Gradle plugin.
+    Log.d("LibCat", "This log is printed to Logcat and the xLog android printer");
   }
 }
