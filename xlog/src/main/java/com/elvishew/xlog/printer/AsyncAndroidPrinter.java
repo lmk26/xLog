@@ -48,7 +48,7 @@ public class AsyncAndroidPrinter extends AndroidPrinter {
   /**
    * Constructor.
    *
-   * @param maxChunkSize the max size of each log chunk
+   * @param maxChunkSize the max UTF-8 byte size of each log chunk
    */
   public AsyncAndroidPrinter(int maxChunkSize) {
     this(false, maxChunkSize);
@@ -58,7 +58,7 @@ public class AsyncAndroidPrinter extends AndroidPrinter {
    * Constructor.
    *
    * @param autoSeparate whether logs should be separated by line separator automatically
-   * @param maxChunkSize the max size of each log chunk
+   * @param maxChunkSize the max UTF-8 byte size of each log chunk
    */
   public AsyncAndroidPrinter(boolean autoSeparate, int maxChunkSize) {
     super(autoSeparate, maxChunkSize);

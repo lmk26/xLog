@@ -30,6 +30,7 @@ import com.elvishew.xlog.XLogUtil;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -93,6 +94,32 @@ public class AndroidPrinterTest {
 
       start = end;
     }
+  }
+
+  @Test
+  public void testPrintMultibyteMessageByUtf8ByteSize() {
+    final int maxChunkByteSize = 32;
+    final List<String> chunks = new ArrayList<>();
+    AndroidPrinter printer = new AndroidPrinter(maxChunkByteSize) {
+      @Override
+      void printChunk(int logLevel, String tag, String msg) {
+        chunks.add(msg);
+      }
+    };
+    StringBuilder message = new StringBuilder();
+    for (int i = 0; i < 20; i++) {
+      message.append("ASCII中文🙂");
+    }
+
+    printer.println(LogLevel.DEBUG, "tag", message.toString());
+
+    assertTrue(chunks.size() > 1);
+    StringBuilder reconstructedMessage = new StringBuilder();
+    for (String chunk : chunks) {
+      assertTrue(chunk.getBytes(StandardCharsets.UTF_8).length <= maxChunkByteSize);
+      reconstructedMessage.append(chunk);
+    }
+    assertEquals(message.toString(), reconstructedMessage.toString());
   }
 
   @Test
