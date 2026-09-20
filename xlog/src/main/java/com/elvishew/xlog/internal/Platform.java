@@ -24,6 +24,7 @@ import android.os.Bundle;
 import com.elvishew.xlog.formatter.message.object.BundleFormatter;
 import com.elvishew.xlog.formatter.message.object.IntentFormatter;
 import com.elvishew.xlog.formatter.message.object.ObjectFormatter;
+import com.elvishew.xlog.formatter.message.object.ThrowableFormatter;
 import com.elvishew.xlog.printer.AndroidPrinter;
 import com.elvishew.xlog.printer.ConsolePrinter;
 import com.elvishew.xlog.printer.Printer;
@@ -80,6 +81,7 @@ public class Platform {
       Map<Class<?>, ObjectFormatter<?>> objectFormatters = new HashMap<>();
       objectFormatters.put(Bundle.class, new BundleFormatter());
       objectFormatters.put(Intent.class, new IntentFormatter());
+      objectFormatters.put(Throwable.class, new ThrowableFormatter());
       BUILTIN_OBJECT_FORMATTERS = Collections.unmodifiableMap(objectFormatters);
     }
 

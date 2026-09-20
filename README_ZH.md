@@ -1,6 +1,6 @@
 # XLog
 
-[English](README.md)
+[English](README.md) · [更新日志](CHANGELOG_ZH.md)
 
 > 这是 [Elvis Hew 的 xLog](https://github.com/elvishew/xLog) 的非官方维护分支。原项目及本分支均使用 Apache License 2.0。
 

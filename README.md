@@ -1,6 +1,6 @@
 # XLog
 
-[简体中文](README_ZH.md)
+[简体中文](README_ZH.md) · [Changelog](CHANGELOG.md)
 
 > This is an unofficial maintained fork of [Elvis Hew's xLog](https://github.com/elvishew/xLog). The original project and this fork are licensed under the Apache License 2.0.
 
